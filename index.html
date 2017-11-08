@@ -15,6 +15,20 @@
 	<!-- Map -->
 	<div id="map"></div>
 
+	<aside>
+		<p>Locations</p>
+		<input type="text" name="location" data-bind="attr: {placeholder: ph}, value: location">
+		<select data-bind="options: filters"></select>
+		<ul data-bind="template: {name: 'address-template', foreach: address}">
+		</ul>
+	</aside>
+
+	<script type="text/html" id="address-template">
+		<li>
+			<p data-bind="text: address, click: $parent.handleClick"></p>
+		</li>
+	</script>
+
 	<script src="js/map.js"></script>
 	<script src="js/app.js"></script>
 	<script async defer 
