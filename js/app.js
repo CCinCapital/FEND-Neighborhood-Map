@@ -1,4 +1,6 @@
 function AppViewModel() {
+  this.displaySideBar = ko.observable(false)
+
   this.location = ko.observable('')
   this.ph = 'Enter Location'
   this.filters = ko.observableArray(['1', '2', '3', '4'])
@@ -13,6 +15,10 @@ function AppViewModel() {
 
   this.handleClick = function(target) {
     console.log(target)
+  }
+
+  this.toggleSideBar = function(e) {
+    this.displaySideBar(!this.displaySideBar())
   }
 }
 

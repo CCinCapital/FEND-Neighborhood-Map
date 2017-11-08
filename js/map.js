@@ -9,6 +9,19 @@ function initMap() {
       style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
       position: google.maps.ControlPosition.TOP_RIGHT
     },
+
+    zoomControl: true,
+    zoomControlOptions: {
+        position: google.maps.ControlPosition.RIGHT_CENTER
+    },
+
+    streetViewControl: true,
+    StreetViewControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_BOTTOM
+    },
+
+    scaleControl: true,
+    fullscreenControl: true,
   })
 
   // Search bar for locations.
