@@ -1,25 +1,25 @@
-function AppViewModel() {
-  this.displaySideBar = ko.observable(false)
+const AppViewModel = {
+  displaySideBar: ko.observable(false),
 
-  this.location = ko.observable('')
-  this.ph = 'Enter Location'
-  this.filters = ko.observableArray(['1', '2', '3', '4'])
+  location: ko.observable(''),
+  ph: 'Enter Location',
+  filters: ko.observableArray(['1', '2', '3', '4']),
 
-  this.address = ko.observableArray([
+  address: ko.observableArray([
     {address: '101 cormack circle'},
     {address: '202 go north way'},
     {address: '303 hungury road'},
     {address: '404 not found'},
-    {address: '505 in the air'}
-  ])
+    {address: '111 in the air'}
+  ]),
 
-  this.handleClick = function(target) {
+  handleClick: function(target) {
     console.log(target)
-  }
+  },
 
-  this.toggleSideBar = function(e) {
+  toggleSideBar: function(e) {
     this.displaySideBar(!this.displaySideBar())
-  }
+  },
 }
 
-ko.applyBindings(new AppViewModel())
+ko.applyBindings(AppViewModel)
