@@ -16,26 +16,29 @@ const AppViewModel = {
   },
 
   filt: function() {
-    filt.call(this, this)
+    filtByTag.call(this, this)
   }
 }
 
 ko.applyBindings(AppViewModel)
 
 
-function filt() {
+function filtByTag() {
   const filter = this.selectedTag()
 
-  this.markers().forEach(function(mark) {
+  this.markers().forEach(function(marker) {
     if(filter == 'All') {
-      mark.setVisible(true)
+      marker.setVisible(true)
+      marker.shown(true)
     }
     else {
-      if(!mark.tags.includes(filter)) {
-        mark.setVisible(false)
+      if(!marker.tags.includes(filter)) {
+        marker.setVisible(false)
+        marker.shown(false)
       }
       else {
-        mark.setVisible(true)
+        marker.setVisible(true)
+        marker.shown(true)
       }      
     }
   })

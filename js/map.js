@@ -87,6 +87,7 @@ function initMap() {
     })
     marker.addListener('click', markerBounce)
     marker.tags = place.tags
+    marker.shown = ko.observable(true)
     AppViewModel.markers.push(marker)
   })
 

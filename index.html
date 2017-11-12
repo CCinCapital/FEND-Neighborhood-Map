@@ -25,7 +25,7 @@
 	</aside>
 
 	<script type="text/html" id="address-template">
-		<li>
+		<li data-bind="css: { visible: shown }">
 			<p data-bind="text: title, click: $parent.handleClick"></p>
 		</li>
 	</script>
