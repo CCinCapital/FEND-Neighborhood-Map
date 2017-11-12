@@ -7,36 +7,36 @@ const INITIAL_PLACES_OF_INTEREST = [
   },
   { name: 'Art Gallery of Ontario',
     position: {
-      lat: 43.6627064,
-      lng: -79.4025129,
+      lat: 43.653605,
+      lng: -79.392505,
     },
   },
-  { name: 'Hockey Hall of Fame',
+  { name: 'Royal Ontario Museum',
     position: {
-      lat: 43.6627064,
-      lng: -79.4025129,
+      lat: 43.667687,
+      lng: -79.394774,
     },
   },
   {
-    name: 'Royal Ontario Museum',
+    name: 'Old City Hall',
     position: {
-      lat: 43.6627064,
-      lng: -79.4025129,
+      lat: 43.652485,
+      lng: -79.382011,
     }
   },
   {
     name: 'Rogers Centre',
     position: {
-      lat: 43.6570565,
-      lng: -79.3992379,
+      lat: 43.641447,
+      lng: -79.389329,
     },
   },
 ]
 
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 0, lng: 0},
-    zoom: 3,
+    center: {lat: 43.662825, lng: -79.395648},
+    zoom: 14,
     // Move contols around
     // https://developers.google.com/maps/documentation/javascript/examples/control-positioning
     mapTypeControl: true,
@@ -59,6 +59,15 @@ function initMap() {
     fullscreenControl: true,
   })
 
+  // Setup markers for each initial location
+  INITIAL_PLACES_OF_INTEREST.forEach(function(place) {
+    AppViewModel.markers.push(new google.maps.Marker({
+      map: map,
+      title: place.name,
+      position: place.position,
+    }))
+  })
+
   // Search bar for locations.
   // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
   const input = document.getElementById('mapSearch')
@@ -68,17 +77,11 @@ function initMap() {
     searchBox.setBounds(map.getBounds())
   })
 
-  let markers = []
   searchBox.addListener('places_changed', function() {
     let places = searchBox.getPlaces()
     if(places.length == 0) {
       return
     }
-
-    markers.forEach(function(marker) {
-      marker.setMap(null)
-    })
-    markers = []
 
     // For each place, get the icon, name and location.
     var bounds = new google.maps.LatLngBounds()
@@ -89,11 +92,18 @@ function initMap() {
       }
 
       // Create a marker for each place.
-      markers.push(new google.maps.Marker({
+      const infoWindow = new google.maps.InfoWindow()
+      const marker = new google.maps.Marker({
         map: map,
         title: place.name,
-        position: place.geometry.location
-      }))
+        position: place.geometry.location,
+        animation: google.maps.Animation.DROP,
+      })
+      marker.addListener('click', function() {
+        openInfoWindow(this, place, infoWindow)
+        // Why is this knockoutjs observableArray not causing UI update?
+        // https://stackoverflow.com/a/10357748    
+      })
 
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
@@ -104,4 +114,22 @@ function initMap() {
     })
     map.fitBounds(bounds)
   })
+}
+
+function openInfoWindow(marker, place, infoWindow) {
+  if(infoWindow.marker != marker) {
+    infoWindow.marker = marker
+    infoWindow.setContent(`
+      <div>
+        <p>${place.formatted_address}</p>
+      </div>
+    `)
+    infoWindow.open(map, marker)
+    infoWindow.addListener('closeclick', function() {
+      infoWindow.setMarker = null
+    })
+  }
+  else {
+    infoWindow.open(map, marker)
+  }
 }
