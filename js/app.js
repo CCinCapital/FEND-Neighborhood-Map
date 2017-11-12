@@ -3,17 +3,40 @@ const AppViewModel = {
 
   location: ko.observable(''),
   ph: 'Enter Location',
-  filters: ko.observableArray(['1', '2', '3', '4']),
-
-  address: ko.observableArray(INITIAL_PLACES_OF_INTEREST),
+  tags: ko.observableArray(['All']),
+  selectedTag: ko.observable(),
+  markers: ko.observableArray(),
 
   handleClick: function(target) {
-    console.log(target)
+    markerBounce.call(this, target)
   },
 
-  toggleSideBar: function(e) {
+  toggleSideBar: function() {
     this.displaySideBar(!this.displaySideBar())
   },
+
+  filt: function() {
+    filt.call(this, this)
+  }
 }
 
 ko.applyBindings(AppViewModel)
+
+
+function filt() {
+  const filter = this.selectedTag()
+
+  this.markers().forEach(function(mark) {
+    if(filter == 'All') {
+      mark.setVisible(true)
+    }
+    else {
+      if(!mark.tags.includes(filter)) {
+        mark.setVisible(false)
+      }
+      else {
+        mark.setVisible(true)
+      }      
+    }
+  })
+}

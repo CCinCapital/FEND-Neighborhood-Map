@@ -7,7 +7,7 @@
 	<script src="bower_components/knockout/dist/knockout.js"></script>
 	<link rel="stylesheet" type="text/css" href="resources/styles/stylesheet.css">
 </head>
-<body>
+<body onload="initApp()">
 	<header>
 		<img src="resources/images/map.svg" data-bind="click: toggleSideBar">
 		<input id="mapSearch" type="text" name="mapSearch">
@@ -19,14 +19,14 @@
 	<aside data-bind="css: { show: displaySideBar }">
 		<p>Locations</p>
 		<input type="text" name="location" data-bind="attr: {placeholder: ph}, value: location">
-		<select data-bind="options: filters"></select>
-		<ul data-bind="template: {name: 'address-template', foreach: address}">
+		<select data-bind="options: tags, value: selectedTag, event: {click: filt}"></select>
+		<ul data-bind="template: {name: 'address-template', foreach: markers}">
 		</ul>
 	</aside>
 
 	<script type="text/html" id="address-template">
 		<li>
-			<p data-bind="text: name, click: $parent.handleClick"></p>
+			<p data-bind="text: title, click: $parent.handleClick"></p>
 		</li>
 	</script>
 

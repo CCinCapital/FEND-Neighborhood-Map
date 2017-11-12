@@ -4,25 +4,29 @@ const INITIAL_PLACES_OF_INTEREST = [
       lat: 43.6780158,
       lng: -79.4095692,
     },
+    tags: ['Castle', 'Historical'],
   },
   { name: 'Art Gallery of Ontario',
     position: {
       lat: 43.653605,
       lng: -79.392505,
     },
+    tags: ['Educational'],
   },
   { name: 'Royal Ontario Museum',
     position: {
       lat: 43.667687,
       lng: -79.394774,
     },
+    tags: ['Educational'],
   },
   {
     name: 'Old City Hall',
     position: {
       lat: 43.652485,
       lng: -79.382011,
-    }
+    },
+    tags: ['City Hall', 'Historical'],
   },
   {
     name: 'Rogers Centre',
@@ -30,8 +34,23 @@ const INITIAL_PLACES_OF_INTEREST = [
       lat: 43.641447,
       lng: -79.389329,
     },
+    tags: ['Stadium'],
   },
 ]
+
+function initApp() {
+  let tags = []
+  INITIAL_PLACES_OF_INTEREST.forEach(function(place) {
+    place.tags.forEach(function(tag) {
+      tags.push(tag)
+    })
+  })
+
+  const uniqueTags = jsSet(tags)
+  uniqueTags.forEach(function(tag) {
+    AppViewModel.tags.push(tag)
+  })
+}
 
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
@@ -61,11 +80,14 @@ function initMap() {
 
   // Setup markers for each initial location
   INITIAL_PLACES_OF_INTEREST.forEach(function(place) {
-    AppViewModel.markers.push(new google.maps.Marker({
+    const marker = new google.maps.Marker({
       map: map,
       title: place.name,
       position: place.position,
-    }))
+    })
+    marker.addListener('click', markerBounce)
+    marker.tags = place.tags
+    AppViewModel.markers.push(marker)
   })
 
   // Search bar for locations.
@@ -132,4 +154,25 @@ function openInfoWindow(marker, place, infoWindow) {
   else {
     infoWindow.open(map, marker)
   }
+}
+
+function markerBounce() {
+  let self = this
+  self.setAnimation(google.maps.Animation.BOUNCE)
+  setTimeout(function() {
+    self.setAnimation(null)
+  },1400)
+}
+
+function jsSet(array) {
+  let _hash = {}
+  let result = []
+
+  for (let i = 0; i < array.length; i++) {
+    if(!_hash[array[i]]) {
+      _hash[array[i]] = true
+      result.push(array[i])
+    }  
+  }
+  return result
 }
