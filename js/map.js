@@ -1,3 +1,38 @@
+const INITIAL_PLACES_OF_INTEREST = [
+  { name: 'Casa Loma',
+    position: {
+      lat: 43.6780158,
+      lng: -79.4095692,
+    },
+  },
+  { name: 'Art Gallery of Ontario',
+    position: {
+      lat: 43.6627064,
+      lng: -79.4025129,
+    },
+  },
+  { name: 'Hockey Hall of Fame',
+    position: {
+      lat: 43.6627064,
+      lng: -79.4025129,
+    },
+  },
+  {
+    name: 'Royal Ontario Museum',
+    position: {
+      lat: 43.6627064,
+      lng: -79.4025129,
+    }
+  },
+  {
+    name: 'Rogers Centre',
+    position: {
+      lat: 43.6570565,
+      lng: -79.3992379,
+    },
+  },
+]
+
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 0, lng: 0},
