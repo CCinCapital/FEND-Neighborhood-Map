@@ -35,6 +35,7 @@ function filtByTag() {
       if(!marker.tags.includes(filter)) {
         marker.setVisible(false)
         marker.shown(false)
+        marker.infoWindow.close()
       }
       else {
         marker.setVisible(true)
