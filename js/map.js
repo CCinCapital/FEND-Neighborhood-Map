@@ -80,20 +80,7 @@ function initMap() {
 
   // Setup markers for each initial location
   INITIAL_PLACES_OF_INTEREST.forEach(function(place) {
-    const marker = new google.maps.Marker({
-      map: map,
-      position: place.position,
-    })
-
-    marker.addListener('click', function() {
-      onMarkerClick(this)
-    })
-
-    marker.infoWindow = new google.maps.InfoWindow()
-    marker.name = place.name
-    marker.tags = place.tags
-    marker.shown = ko.observable(true)
-
+    const marker = initMarker(map, place)
     AppViewModel.markers.push(marker)
   })
 
@@ -102,16 +89,11 @@ function initMap() {
   const input = document.getElementById('mapSearch')
   const searchBox = new google.maps.places.SearchBox(input)
 
-  map.addListener('bounds_changed', function() {
-    searchBox.setBounds(map.getBounds())
-  })
-
   searchBox.addListener('places_changed', function() {
     let places = searchBox.getPlaces()
     if(places.length == 0) {
       return
     }
-
     // For each place, get the icon, name and location.
     var bounds = new google.maps.LatLngBounds()
     places.forEach(function(place) {
@@ -119,19 +101,6 @@ function initMap() {
         console.log("Returned place contains no geometry")
         return
       }
-
-      // Create a marker for each place.
-      const infoWindow = new google.maps.InfoWindow()
-      const marker = new google.maps.Marker({
-        map: map,
-        title: place.name,
-        position: place.geometry.location,
-        animation: google.maps.Animation.DROP,
-      })
-      marker.addListener('click', function() {
-        openInfoWindow(this, infoWindow)  
-      })
-
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
         bounds.union(place.geometry.viewport)
@@ -141,6 +110,25 @@ function initMap() {
     })
     map.fitBounds(bounds)
   })
+}
+
+function initMarker(map, place) {
+  const marker = new google.maps.Marker({
+    map: map,
+    position: place.position,
+  })
+
+  marker.addListener('click', function() {
+    onMarkerClick(this)
+  })
+
+  marker.infoWindow = new google.maps.InfoWindow()
+  marker.name = place.name
+  marker.tags = place.tags
+  marker.shown = ko.observable(true)
+  marker.uuid = uuid()
+
+  return marker
 }
 
 function onMarkerClick(marker) {
@@ -153,7 +141,8 @@ function openInfoWindow(marker) {
     marker.infoWindow.marker = marker
     marker.infoWindow.setContent(`
       <div>
-        <p></p>
+        <p>${marker.name}</p>
+        <button id=${marker.uuid} onclick="AppViewModel.log(this)">Save</button>
       </div>
     `)
     marker.infoWindow.open(map, marker)
