@@ -56,6 +56,9 @@ function filtByTag() {
 // https://stackoverflow.com/questions/3480771/how-do-i-check-if-string-contains-substring
 function filtByName() {
   const filter = this.markerNameFilter()
+  if (!filter) {
+    return
+  }
   this.markers().forEach(function(marker) {
     if (marker.visible) {
       if(marker.name.toLowerCase().indexOf(filter) >= 0) {
