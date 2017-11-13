@@ -1,11 +1,13 @@
 const AppViewModel = {
   displaySideBar: ko.observable(false),
-
-  location: ko.observable(),
-  ph: 'Enter Location',
   tags: ko.observableArray(['All']),
-  selectedTag: ko.observable(),
+
   markers: ko.observableArray(),
+  markerNameFilter: ko.observable(),
+  markerTagFilter: ko.observable(),
+
+  markerNameFilter_ph: 'Enter Location',
+
 
   handleClick: function(target) {
     onMarkerClick.call(this, target)
@@ -17,18 +19,19 @@ const AppViewModel = {
 
   filt: function() {
     filtByTag.call(this, this)
+    filtByName.call(this, this)
   }
 }
 
-AppViewModel.location.subscribe(function(change) {
-  filtByLocation(AppViewModel)
+AppViewModel.markerNameFilter.subscribe(function(change) {
+  AppViewModel.filt()
 })
 
 ko.applyBindings(AppViewModel)
 
 
 function filtByTag() {
-  const filter = this.selectedTag()
+  const filter = this.markerTagFilter()
 
   this.markers().forEach(function(marker) {
     if(filter == 'All') {
@@ -51,17 +54,19 @@ function filtByTag() {
 
 // Check string contains substring
 // https://stackoverflow.com/questions/3480771/how-do-i-check-if-string-contains-substring
-function filtByLocation(contex) {
-  const filter = contex.location()
-  contex.markers().forEach(function(marker) {
-    if(marker.name.toLowerCase().indexOf(filter) >= 0) {
-      marker.setVisible(true)
-      marker.shown(true)
-    }
-    else {
-      marker.setVisible(false)
-      marker.shown(false)
-      marker.infoWindow.close()
+function filtByName() {
+  const filter = this.markerNameFilter()
+  this.markers().forEach(function(marker) {
+    if (marker.visible) {
+      if(marker.name.toLowerCase().indexOf(filter) >= 0) {
+        marker.setVisible(true)
+        marker.shown(true)
+      }
+      else {
+        marker.setVisible(false)
+        marker.shown(false)
+        marker.infoWindow.close()
+      }
     }
   })
 }
