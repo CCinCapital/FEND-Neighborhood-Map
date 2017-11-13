@@ -26,10 +26,11 @@
 
 	<script type="text/html" id="address-template">
 		<li data-bind="css: { visible: shown }">
-			<p data-bind="text: title, click: $parent.handleClick"></p>
+			<p data-bind="text: name, click: $parent.handleClick"></p>
 		</li>
 	</script>
 
+	<script src="js/helper.js"></script>
 	<script src="js/map.js"></script>
 	<script src="js/app.js"></script>
 	<script async defer 

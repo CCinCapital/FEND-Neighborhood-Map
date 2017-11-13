@@ -8,7 +8,7 @@ const AppViewModel = {
   markers: ko.observableArray(),
 
   handleClick: function(target) {
-    markerBounce.call(this, target)
+    onMarkerClick.call(this, target)
   },
 
   toggleSideBar: function() {

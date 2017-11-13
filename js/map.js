@@ -82,12 +82,18 @@ function initMap() {
   INITIAL_PLACES_OF_INTEREST.forEach(function(place) {
     const marker = new google.maps.Marker({
       map: map,
-      title: place.name,
       position: place.position,
     })
-    marker.addListener('click', markerBounce)
+
+    marker.addListener('click', function() {
+      onMarkerClick(this)
+    })
+
+    marker.infoWindow = new google.maps.InfoWindow()
+    marker.name = place.name
     marker.tags = place.tags
     marker.shown = ko.observable(true)
+
     AppViewModel.markers.push(marker)
   })
 
@@ -123,9 +129,7 @@ function initMap() {
         animation: google.maps.Animation.DROP,
       })
       marker.addListener('click', function() {
-        openInfoWindow(this, place, infoWindow)
-        // Why is this knockoutjs observableArray not causing UI update?
-        // https://stackoverflow.com/a/10357748    
+        openInfoWindow(this, infoWindow)  
       })
 
       if (place.geometry.viewport) {
@@ -139,41 +143,32 @@ function initMap() {
   })
 }
 
-function openInfoWindow(marker, place, infoWindow) {
-  if(infoWindow.marker != marker) {
-    infoWindow.marker = marker
-    infoWindow.setContent(`
+function onMarkerClick(marker) {
+  markerBounce(marker)
+  openInfoWindow(marker)
+}
+
+function openInfoWindow(marker) {
+  if(marker.infoWindow.marker != marker) {
+    marker.infoWindow.marker = marker
+    marker.infoWindow.setContent(`
       <div>
-        <p>${place.formatted_address}</p>
+        <p></p>
       </div>
     `)
-    infoWindow.open(map, marker)
-    infoWindow.addListener('closeclick', function() {
-      infoWindow.setMarker = null
+    marker.infoWindow.open(map, marker)
+    marker.infoWindow.addListener('closeclick', function() {
+      marker.infoWindow.setMarker = null
     })
   }
   else {
-    infoWindow.open(map, marker)
+    marker.infoWindow.open(map, marker)
   }
 }
 
-function markerBounce() {
-  let self = this
-  self.setAnimation(google.maps.Animation.BOUNCE)
+function markerBounce(marker) {
+  marker.setAnimation(google.maps.Animation.BOUNCE)
   setTimeout(function() {
-    self.setAnimation(null)
+    marker.setAnimation(null)
   },1400)
-}
-
-function jsSet(array) {
-  let _hash = {}
-  let result = []
-
-  for (let i = 0; i < array.length; i++) {
-    if(!_hash[array[i]]) {
-      _hash[array[i]] = true
-      result.push(array[i])
-    }  
-  }
-  return result
 }
