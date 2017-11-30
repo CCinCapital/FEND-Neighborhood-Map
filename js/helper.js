@@ -140,9 +140,68 @@ function createMarker (business) {
     position: latLng,
   })
 
+  marker.infoWindow = new google.maps.InfoWindow()
+
   marker.addListener('click', function() {
-    onMarkerClick(this)
+    onMarkerClick(business)
   })
 
   return marker
+}
+
+
+function placeMarker(latLng, map) {
+  const image = {
+    path: google.maps.SymbolPath.CIRCLE,
+    strokeColor: 'red',
+    scale: 6,
+  };
+  const marker = new google.maps.Marker({
+    position: latLng,
+    map: map,
+    icon: image,
+  })
+  AppViewModel.map.panTo(latLng)
+}
+
+function onMarkerClick(business) {
+  markerBounce(business.marker)
+  openInfoWindow(business)
+}
+
+function openInfoWindow(business) {
+  const {marker, name, price, rating, review_count, url, display_phone, location, image_url} = business
+  const address = location.display_address.join(',').toString().replace(/,/g, ', ')
+
+  if(marker.infoWindow.marker != marker) {
+    marker.infoWindow.marker = marker
+    marker.infoWindow.setContent(`
+      <div style="width: 250px;">
+        <h3>${name}</h3>
+        <p>
+          <span>Price: ${price}</span>
+          <span>- Rating: ${rating}</span>
+          <span>- Reviews: ${review_count}</span>
+        </p>
+        <p>Phone: ${display_phone} |<span style="padding-left: 20px;"><a href=${url} target="_blank">Website</a></span></p>        
+        <p>Address: ${address}</p>
+        <img src=${image_url} alt=${name} style="width: 100px;"/>
+      </div>
+    `)
+
+    marker.infoWindow.open(map, marker)
+    marker.infoWindow.addListener('closeclick', function() {
+      marker.infoWindow.setMarker = null
+    })
+  }
+  else {
+    marker.infoWindow.open(map, marker)
+  }
+}
+
+function markerBounce(marker) {
+  marker.setAnimation(google.maps.Animation.BOUNCE)
+  setTimeout(function() {
+    marker.setAnimation(null)
+  },1400)
 }

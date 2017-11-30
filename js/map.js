@@ -78,81 +78,9 @@ function initMap() {
   })
 
   AppViewModel.map.addListener('click', function(e) {
-    placeMarker(e.latLng, map)
+    placeMarker(e.latLng, AppViewModel.map)
   })
 
   AppViewModel.mapLoaded(true)
 }
 
-function placeMarker(latLng, map) {
-  const image = {
-    path: google.maps.SymbolPath.CIRCLE,
-    strokeColor: 'red',
-    scale: 6,
-  };
-  const marker = new google.maps.Marker({
-    position: latLng,
-    map: map,
-    icon: image,
-  })
-  AppViewModel.map.panTo(latLng)
-}
-
-function initMarker(map, place) {
-  const marker = new google.maps.Marker({
-    map: map,
-    position: place.position,
-  })
-
-  marker.addListener('click', function() {
-    onMarkerClick(this)
-  })
-
-  marker.infoWindow = new google.maps.InfoWindow()
-  marker.wikiURL = place.wikiURL
-  marker.name = place.name
-  marker.tags = place.tags
-  marker.shown = ko.observable(true)
-  marker.uuid = uuid()
-
-  return marker
-}
-
-function onMarkerClick(marker) {
-  markerBounce(marker)
-  openInfoWindow(marker)
-}
-
-function openInfoWindow(marker) {
-  if(marker.infoWindow.marker != marker) {
-    marker.infoWindow.marker = marker
-    marker.infoWindow.setContent(`
-      <div>
-        <p>Loading Info...</p>
-      </div>
-    `)
-
-    const page = marker.wikiURL.split('/').pop()
-    fetch(`/w/api.php?action=query&format=json&prop=extracts&titles=${place}&exintro=1`, {
-      headers: {
-        'Api-User-Agent' : 'Example/1.0'
-      },
-      mode: 'cors',
-      method: 'POST'
-    }).then(console.log)
-    marker.infoWindow.open(map, marker)
-    marker.infoWindow.addListener('closeclick', function() {
-      marker.infoWindow.setMarker = null
-    })
-  }
-  else {
-    marker.infoWindow.open(map, marker)
-  }
-}
-
-function markerBounce(marker) {
-  marker.setAnimation(google.maps.Animation.BOUNCE)
-  setTimeout(function() {
-    marker.setAnimation(null)
-  },1400)
-}
