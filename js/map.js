@@ -1,60 +1,27 @@
-const INITIAL_PLACES_OF_INTEREST = [
-  { name: 'Casa Loma',
-    position: {
-      lat: 43.6780158,
-      lng: -79.4095692,
-    },
-    tags: ['Castle', 'Historical'],
-  },
-  { name: 'Art Gallery of Ontario',
-    position: {
-      lat: 43.653605,
-      lng: -79.392505,
-    },
-    tags: ['Educational'],
-  },
-  { name: 'Royal Ontario Museum',
-    position: {
-      lat: 43.667687,
-      lng: -79.394774,
-    },
-    tags: ['Educational'],
-  },
-  {
-    name: 'Old City Hall',
-    position: {
-      lat: 43.652485,
-      lng: -79.382011,
-    },
-    tags: ['City Hall', 'Historical'],
-  },
-  {
-    name: 'Rogers Centre',
-    position: {
-      lat: 43.641447,
-      lng: -79.389329,
-    },
-    tags: ['Stadium'],
-  },
-]
-
 function initApp() {
-  let tags = []
-  INITIAL_PLACES_OF_INTEREST.forEach(function(place) {
-    place.tags.forEach(function(tag) {
-      tags.push(tag)
-    })
-  })
+  initYelpAPI()
+  initMap()
+}
 
-  const uniqueTags = jsSet(tags)
-  uniqueTags.forEach(function(tag) {
-    AppViewModel.tags.push(tag)
-  })
+function initYelpAPI() {
+  const _YelpAppId = 'bg69c3FQKEnMNsBUwvk2YA',
+        _YelpAppSecret = 'M3IkShcjrhXDGSvQebZhNizmX8imOnXs308UfB2BPCC1JFZXykvt5zhUZjfLMZdl'
+
+  makeRequest('getAccessToken', {'appId': _YelpAppId,'appSecret': _YelpAppSecret})
+    .then(function(response) {
+      AppViewModel.yelpAccessToken = JSON.parse(response).payload
+    })
 }
 
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
+    backgroundColor: '#00aaa0',
     center: {lat: 43.662825, lng: -79.395648},
+    clickableIcons: false,
+    disableDefaultUI: true,
+    fullscreenControl: false,
+    gestureHandling: 'greedy',
+    keyboardShortcuts: false,
     zoom: 14,
     // Move contols around
     // https://developers.google.com/maps/documentation/javascript/examples/control-positioning
@@ -69,19 +36,9 @@ function initMap() {
         position: google.maps.ControlPosition.RIGHT_CENTER
     },
 
-    streetViewControl: true,
-    StreetViewControlOptions: {
-      position: google.maps.ControlPosition.RIGHT_BOTTOM
-    },
+    streetViewControl: false,
 
     scaleControl: true,
-    fullscreenControl: true,
-  })
-
-  // Setup markers for each initial location
-  INITIAL_PLACES_OF_INTEREST.forEach(function(place) {
-    const marker = initMarker(map, place)
-    AppViewModel.markers.push(marker)
   })
 
   // Search bar for locations.
@@ -123,6 +80,7 @@ function initMarker(map, place) {
   })
 
   marker.infoWindow = new google.maps.InfoWindow()
+  marker.wikiURL = place.wikiURL
   marker.name = place.name
   marker.tags = place.tags
   marker.shown = ko.observable(true)
@@ -141,10 +99,18 @@ function openInfoWindow(marker) {
     marker.infoWindow.marker = marker
     marker.infoWindow.setContent(`
       <div>
-        <p>${marker.name}</p>
-        <button id=${marker.uuid} onclick="AppViewModel.log(this)">Save</button>
+        <p>Loading Info...</p>
       </div>
     `)
+
+    const page = marker.wikiURL.split('/').pop()
+    fetch(`/w/api.php?action=query&format=json&prop=extracts&titles=${place}&exintro=1`, {
+      headers: {
+        'Api-User-Agent' : 'Example/1.0'
+      },
+      mode: 'cors',
+      method: 'POST'
+    }).then(console.log)
     marker.infoWindow.open(map, marker)
     marker.infoWindow.addListener('closeclick', function() {
       marker.infoWindow.setMarker = null

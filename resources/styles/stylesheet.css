@@ -38,12 +38,12 @@ aside {
 	bottom: 0;
 	padding: 50px 10px 10px 10px;
 	background-color: #666;
-	transform: translateX(-100%);
+	transform: translateX(0%);
 	transition: transform 0.5s;
 }
 
 aside.show {
-	transform: translateX(0%);
+	transform: translateX(-100%);
 }
 
 .visible {
