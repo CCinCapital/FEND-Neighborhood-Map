@@ -5,6 +5,7 @@ const AppViewModel = {
 
   map: null,
   mapLoaded: ko.observable(false),
+  businessLoaded: ko.observable(false),
   businesses: ko.observableArray(),
 
   updateBusinesses: function(businesses) {
@@ -13,6 +14,7 @@ const AppViewModel = {
       .map(function(business) {
         AppViewModel.businesses.push(business)
       })
+    AppViewModel.businessLoaded(true)
   },
 
   displaySideBar: ko.observable(false),
@@ -26,8 +28,7 @@ const AppViewModel = {
 
 
   handleClick: function(target) {
-    //onMarkerClick.call(this, target)
-    console.log(target)
+    onMarkerClick.call(this, target)
   },
 
   toggleSideBar: function() {
@@ -54,11 +55,7 @@ AppViewModel.markerNameFilter.subscribe(function(change) {
   AppViewModel.filt()
 })
 
-AppViewModel.mapLoaded.subscribe(function(change) {
-  initMarkers()
-})
-
-AppViewModel.businesses.subscribe(function(change) {
+AppViewModel.businessLoaded.subscribe(function(change) {
   initMarkers()
 })
 

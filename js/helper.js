@@ -125,7 +125,7 @@ function GeoLocation (options) {
 }
 
 function initMarkers () {
-  if(AppViewModel.mapLoaded() && AppViewModel.businesses().length > 0) {
+  if(AppViewModel.mapLoaded() && AppViewModel.businessLoaded()) {
     AppViewModel.businesses().map(function(business) {
       business.marker = createMarker(business)
     })
