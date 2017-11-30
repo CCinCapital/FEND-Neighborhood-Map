@@ -7,26 +7,27 @@
 	<script src="bower_components/knockout/dist/knockout.js"></script>
 	<link rel="stylesheet" type="text/css" href="resources/styles/stylesheet.css">
 </head>
-<body>
+<body onload="initApp()">
 	<header>
 		<img src="resources/images/map.svg" data-bind="click: toggleSideBar">
-		<input id="mapSearch" type="text" name="mapSearch">
+		<img src="resources/images/my_location.svg" data-bind="click: getGeoLocation">
 	</header>
 
 	<!-- Map -->
 	<div id="map"></div>
+	<input id="mapSearchBox" type="text" name="mapSearchBox">
 
 	<aside data-bind="css: { show: displaySideBar }">
 		<p>Locations</p>
 		<input type="text" name="markerNameFilter" data-bind="attr: {placeholder: markerNameFilter_ph}, textInput: markerNameFilter">
 		<select data-bind="options: tags, value: markerTagFilter, event: {click: filt}"></select>
-		<ul data-bind="template: {name: 'address-template', foreach: markers}">
+		<ul data-bind="template: {name: 'business-card', foreach: businesses}">
 		</ul>
 	</aside>
 
-	<script type="text/html" id="address-template">
-		<li data-bind="css: { visible: shown }">
-			<p data-bind="text: name, click: $parent.handleClick"></p>
+	<script type="text/html" id="business-card">
+		<li data-bind="css: {visible: true}">
+			<p data-bind="text: id, click: $parent.handleClick"></p>
 		</li>
 	</script>
 
@@ -35,7 +36,7 @@
 	<script src="js/app.js"></script>
 
 	<script async defer 
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRyhEecFU1qMP1R5WTK621t0CddLkKHB8&v=3&libraries=places&callback=initApp"></script>
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRyhEecFU1qMP1R5WTK621t0CddLkKHB8&v=3&libraries=places&callback=initMap"></script>
 
 </body>
 </html>

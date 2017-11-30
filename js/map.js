@@ -1,6 +1,5 @@
 function initApp() {
   initYelpAPI()
-  initMap()
 }
 
 function initYelpAPI() {
@@ -11,12 +10,22 @@ function initYelpAPI() {
     .then(function(response) {
       AppViewModel.yelpAccessToken = JSON.parse(response).payload
     })
+    .catch(function(err) {
+      throw new Error(`Error encountered during initializing Yelp API: ${err}`)
+    })
+    .then(function(){  
+      return makeRequest('getBusinesses', { 
+        'accessToken': AppViewModel.yelpAccessToken.access_token,
+        'coordinate': `${AppViewModel.APP_DEFAULT_LAT_LNG.lat}, ${AppViewModel.APP_DEFAULT_LAT_LNG.lng}`,
+      })
+    })
+    .then(AppViewModel.updateBusinesses)
 }
 
 function initMap() {
-  const map = new google.maps.Map(document.getElementById('map'), {
+  AppViewModel.map = new google.maps.Map(document.getElementById('map'), {
     backgroundColor: '#00aaa0',
-    center: {lat: 43.662825, lng: -79.395648},
+    center: AppViewModel.APP_DEFAULT_LAT_LNG,
     clickableIcons: false,
     disableDefaultUI: true,
     fullscreenControl: false,
@@ -43,7 +52,7 @@ function initMap() {
 
   // Search bar for locations.
   // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
-  const input = document.getElementById('mapSearch')
+  const input = document.getElementById('mapSearchBox')
   const searchBox = new google.maps.places.SearchBox(input)
 
   searchBox.addListener('places_changed', function() {
@@ -65,8 +74,28 @@ function initMap() {
         bounds.extend(place.geometry.location)
       }
     })
-    map.fitBounds(bounds)
+    AppViewModel.map.fitBounds(bounds)
   })
+
+  AppViewModel.map.addListener('click', function(e) {
+    placeMarker(e.latLng, map)
+  })
+
+  AppViewModel.mapLoaded(true)
+}
+
+function placeMarker(latLng, map) {
+  const image = {
+    path: google.maps.SymbolPath.CIRCLE,
+    strokeColor: 'red',
+    scale: 6,
+  };
+  const marker = new google.maps.Marker({
+    position: latLng,
+    map: map,
+    icon: image,
+  })
+  AppViewModel.map.panTo(latLng)
 }
 
 function initMarker(map, place) {

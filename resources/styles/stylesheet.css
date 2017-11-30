@@ -31,6 +31,12 @@ header {
 	flex: 1;
 }
 
+#mapSearchBox {
+	width: 200px;
+	position: absolute;
+	z-index: 99;
+}
+
 aside {
 	position: absolute;
 	top: 0;

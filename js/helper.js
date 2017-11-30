@@ -3,7 +3,7 @@
 function makeXMLHttpRequest (method, baseUrl, request, headers, payload) {
   const url = baseUrl + '/' + request
 
-  return new Promise(function( resolve, reject) {
+  return new Promise(function(resolve, reject) {
     const xhr = new XMLHttpRequest()
     xhr.open(method, url)
 
@@ -117,3 +117,32 @@ function uuid () {
   return Date.now()+((Math.random()*0x10000000)|0).toString(16)
 }
 
+
+function GeoLocation (options) {
+  return new Promise(function(resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject, options)
+  })
+}
+
+function initMarkers () {
+  if(AppViewModel.mapLoaded() && AppViewModel.businesses().length > 0) {
+    AppViewModel.businesses().map(function(business) {
+      business.marker = createMarker(business)
+    })
+  }
+}
+
+function createMarker (business) {
+  const latLng = {lat: business.coordinates.latitude, lng: business.coordinates.longitude}
+
+  const marker = new google.maps.Marker({
+    map: AppViewModel.map,
+    position: latLng,
+  })
+
+  marker.addListener('click', function() {
+    onMarkerClick(this)
+  })
+
+  return marker
+}
