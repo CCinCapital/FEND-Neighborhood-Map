@@ -6,11 +6,23 @@ This project is to demostrates the ability to build web app with MVVM framework 
 ## App Boot Sequence
 
 1. User opens `index.html`, App starts to boot.
+- App loads `Knockout.js @3.4.2`, `stylesheet`, `HTML`
 
-2. App loads `Knockout.js @3.4.2`, `stylesheet`, `HTML`, JS code `helper.js`, `map.js`, and `app.js`. App loads `Google Map V3` asynchronously at last.
+2. App is now covered by a fullscreen loading message until loading complete. 
+- App loads JS code `helper.js`, `map.js`, and `app.js`. App loads `Google Map V3` asynchronously at last.
 - App fires XMLHttpRequest to `RapidAPI` immediately after `<body></body>` loads to fetch the `Yelp API AccessKey` and store it in the `AppViewModel`.
 - App then fires XMLHttpRequest to `RapidAPI` to get the surrounding bussinesses at pre-defined location `APP_DEFAULT_LAT_LNG` stored in `AppViewModel`.
+
+3. App stores the fetched data in `businesses` variable in `AppViewModel`. App also filters out all available `categories` and `price` range of the fetched data, and updates the DOM.
+
+4. The fullscreen loading message is removed, user may interact now.
 
 ## Installation
 1. Clone or download the repository.
 2. open `index.html` and enjoy.
+
+## TODO
+1. search surrounding areas at user drag the map or click on the map.
+2. search around a location, search around current location.
+3. better looking UI
+4. full usage of Yelp Fusion API. (more filter options)
