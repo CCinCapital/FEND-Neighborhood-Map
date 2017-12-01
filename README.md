@@ -3,6 +3,13 @@
 
 This project is to demostrates the ability to build web app with MVVM framework (_`Knockout.js`_) and third party APIs _(`Google Map, RapidAPI, Yelp Fusion`)_. 
 
+## API usage
+- **Google Map**:  Generates Map, Marker, and InfoWindow.
+
+- **Yelp Fusion**:  Provides business infomation around a location.
+
+- **RapidAPI**:  **Yelp Fusion does not support CORS access from webpage**, it only response to access from back-end. RapidAPI acts as the middle man. App send _"/YelpAPI/:method"_ request to RapidAPI, RapidAPI request Yelp Fusion from the back-end, and echo the result back to our APP. 
+
 ## App Boot Sequence
 
 1. User opens `index.html`, App starts to boot.
