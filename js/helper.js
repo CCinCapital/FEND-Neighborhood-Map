@@ -46,60 +46,6 @@ function makeRequest(request, payload) {
   return makeXMLHttpRequest(method, baseUrl, request, headers, payload)
 }
 
-
-function filtByTag() {
-  const filter = this.markerTagFilter()
-
-  this.markers().forEach(function(marker) {
-    if(filter == 'All') {
-      marker.setVisible(true)
-      marker.shown(true)
-    }
-    else {
-      if(!marker.tags.includes(filter)) {
-        marker.setVisible(false)
-        marker.shown(false)
-        marker.infoWindow.close()
-      }
-      else {
-        marker.setVisible(true)
-        marker.shown(true)
-      }      
-    }
-  })
-}
-
-// Check string contains substring
-// https://stackoverflow.com/questions/3480771/how-do-i-check-if-string-contains-substring
-function filtByName() {
-  const filter = this.markerNameFilter()
-  if (!filter) {
-    return
-  }
-  this.markers().forEach(function(marker) {
-    if (marker.visible) {
-      if(marker.name.toLowerCase().indexOf(filter) >= 0) {
-        marker.setVisible(true)
-        marker.shown(true)
-      }
-      else {
-        marker.setVisible(false)
-        marker.shown(false)
-        marker.infoWindow.close()
-      }
-    }
-  })
-}
-
-function filtMarker(marker, markers) {
-  for(let i = 0; i < markers.length; i++) {
-    if(markers[i].uuid === marker.id) {
-      return markers[i]
-    }
-  }
-  return undefined
-}
-
 function jsSet(array) {
   let _hash = {}
   let result = []
@@ -113,11 +59,6 @@ function jsSet(array) {
   return result
 }
 
-function uuid () {
-  return Date.now()+((Math.random()*0x10000000)|0).toString(16)
-}
-
-
 function GeoLocation (options) {
   return new Promise(function(resolve, reject) {
     navigator.geolocation.getCurrentPosition(resolve, reject, options)
@@ -130,6 +71,19 @@ function initMarkers () {
       business.marker = createMarker(business)
     })
   }
+}
+
+function replaceMarkers (array) {
+  const visibleMarkers = AppViewModel.filteredBusinesses().map(function(business){return business.marker})
+  
+  AppViewModel.businesses().map(function(business) {
+    if(visibleMarkers.includes(business.marker)){
+      business.marker.setVisible(true)
+    }
+    else {
+      business.marker.setVisible(false)
+    }
+  })
 }
 
 function createMarker (business) {
@@ -151,12 +105,16 @@ function createMarker (business) {
 
 
 function placeMarker(latLng, map) {
+  if(AppViewModel.userMarker) {
+    AppViewModel.userMarker.setMap(null)
+  }
+
   const image = {
     path: google.maps.SymbolPath.CIRCLE,
     strokeColor: 'red',
     scale: 6,
   };
-  const marker = new google.maps.Marker({
+  AppViewModel.userMarker = new google.maps.Marker({
     position: latLng,
     map: map,
     icon: image,
@@ -164,9 +122,22 @@ function placeMarker(latLng, map) {
   AppViewModel.map.panTo(latLng)
 }
 
-function onMarkerClick(business) {
-  markerBounce(business.marker)
-  openInfoWindow(business)
+function onMarkerClick(target) {
+  const lat = target.coordinates.latitude,
+        lng = target.coordinates.longitude
+
+  closeAllInfoWindow()
+  mapPanTo(lat, lng)
+  markerBounce(target.marker)
+  openInfoWindow(target)
+}
+
+function closeAllInfoWindow() {
+  AppViewModel.businesses().map(function(business) {
+    if(business.marker) {
+      business.marker.infoWindow.close()
+    }
+  })
 }
 
 function openInfoWindow(business) {
@@ -204,4 +175,8 @@ function markerBounce(marker) {
   setTimeout(function() {
     marker.setAnimation(null)
   },1400)
+}
+
+function mapPanTo(lat, lng) {
+  AppViewModel.map.panTo({lat:lat, lng:lng})
 }

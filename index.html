@@ -9,7 +9,6 @@
 </head>
 <body onload="initApp()">
 	<header>
-		<img src="resources/images/map.svg" data-bind="click: toggleSideBar">
 		<img src="resources/images/my_location.svg" data-bind="click: getGeoLocation">
 	</header>
 
@@ -17,16 +16,25 @@
 	<div id="map"></div>
 	<input id="mapSearchBox" type="text" name="mapSearchBox">
 
-	<aside data-bind="css: { show: displaySideBar }">
+	<aside>
 		<p>Locations</p>
-		<input type="text" name="markerNameFilter" data-bind="attr: {placeholder: markerNameFilter_ph}, textInput: markerNameFilter">
-		<select data-bind="options: tags, value: markerTagFilter, event: {click: filt}"></select>
-		<ul data-bind="template: {name: 'business-card', foreach: businesses}">
+		<input type="text" name="nameFilter" data-bind="attr: {placeholder: nameFilter_ph}, textInput: nameFilter">
+		<select data-bind="options: price, value: priceFilter, event: {click: filt}"></select>
+		<select data-bind="options: categories, value: categoryFilter, event: {click: filt}"></select>
+		<ul data-bind="template: {name: 'business-card', foreach: filteredBusinesses}">
 		</ul>
 	</aside>
 
+	<div id="loadingModal" data-bind="css: {hidden: mapLoaded&&businessLoaded}">
+		<div>
+			<h4>App loading...</h4>
+			<p>Map Loaded:  <span data-bind="text: mapLoaded"></span></p>
+			<p>Business Loaded:  <span data-bind="text: businessLoaded"></span></p>
+		</div>
+	</div>
+
 	<script type="text/html" id="business-card">
-		<li data-bind="css: {visible: true}">
+		<li>
 			<p data-bind="text: name, click: $parent.handleClick"></p>
 		</li>
 	</script>
