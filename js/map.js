@@ -1,6 +1,5 @@
 function initApp() {
   initYelpAPI()
-  initMap()
 }
 
 function initYelpAPI() {
@@ -11,12 +10,22 @@ function initYelpAPI() {
     .then(function(response) {
       AppViewModel.yelpAccessToken = JSON.parse(response).payload
     })
+    .catch(function(err) {
+      throw new Error(`Error encountered during initializing Yelp API: ${err}`)
+    })
+    .then(function(){  
+      return makeRequest('getBusinesses', { 
+        'accessToken': AppViewModel.yelpAccessToken.access_token,
+        'coordinate': `${AppViewModel.APP_DEFAULT_LAT_LNG.lat}, ${AppViewModel.APP_DEFAULT_LAT_LNG.lng}`,
+      })
+    })
+    .then(AppViewModel.updateBusinesses)
 }
 
 function initMap() {
-  const map = new google.maps.Map(document.getElementById('map'), {
+  AppViewModel.map = new google.maps.Map(document.getElementById('map'), {
     backgroundColor: '#00aaa0',
-    center: {lat: 43.662825, lng: -79.395648},
+    center: AppViewModel.APP_DEFAULT_LAT_LNG,
     clickableIcons: false,
     disableDefaultUI: true,
     fullscreenControl: false,
@@ -43,7 +52,7 @@ function initMap() {
 
   // Search bar for locations.
   // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
-  const input = document.getElementById('mapSearch')
+  const input = document.getElementById('mapSearchBox')
   const searchBox = new google.maps.places.SearchBox(input)
 
   searchBox.addListener('places_changed', function() {
@@ -65,65 +74,13 @@ function initMap() {
         bounds.extend(place.geometry.location)
       }
     })
-    map.fitBounds(bounds)
-  })
-}
-
-function initMarker(map, place) {
-  const marker = new google.maps.Marker({
-    map: map,
-    position: place.position,
+    AppViewModel.map.fitBounds(bounds)
   })
 
-  marker.addListener('click', function() {
-    onMarkerClick(this)
+  AppViewModel.map.addListener('click', function(e) {
+    placeMarker(e.latLng, AppViewModel.map)
   })
 
-  marker.infoWindow = new google.maps.InfoWindow()
-  marker.wikiURL = place.wikiURL
-  marker.name = place.name
-  marker.tags = place.tags
-  marker.shown = ko.observable(true)
-  marker.uuid = uuid()
-
-  return marker
+  AppViewModel.mapLoaded(true)
 }
 
-function onMarkerClick(marker) {
-  markerBounce(marker)
-  openInfoWindow(marker)
-}
-
-function openInfoWindow(marker) {
-  if(marker.infoWindow.marker != marker) {
-    marker.infoWindow.marker = marker
-    marker.infoWindow.setContent(`
-      <div>
-        <p>Loading Info...</p>
-      </div>
-    `)
-
-    const page = marker.wikiURL.split('/').pop()
-    fetch(`/w/api.php?action=query&format=json&prop=extracts&titles=${place}&exintro=1`, {
-      headers: {
-        'Api-User-Agent' : 'Example/1.0'
-      },
-      mode: 'cors',
-      method: 'POST'
-    }).then(console.log)
-    marker.infoWindow.open(map, marker)
-    marker.infoWindow.addListener('closeclick', function() {
-      marker.infoWindow.setMarker = null
-    })
-  }
-  else {
-    marker.infoWindow.open(map, marker)
-  }
-}
-
-function markerBounce(marker) {
-  marker.setAnimation(google.maps.Animation.BOUNCE)
-  setTimeout(function() {
-    marker.setAnimation(null)
-  },1400)
-}

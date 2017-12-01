@@ -14,7 +14,7 @@ ul {
 }
 
 li {
-	display: none;
+	display: block;
 }
 
 header {
@@ -28,24 +28,59 @@ header {
 }
 
 #map {
-	flex: 1;
+	position: absolute;
+	top: 50px;
+	right: 0;
+	bottom: 0;
+	width: 80%;
+}
+
+#mapSearchBox {
+	width: 200px;
+	position: absolute;
+	z-index: 99;
 }
 
 aside {
 	position: absolute;
-	top: 0;
+	top: 50px;
 	left: 0;
 	bottom: 0;
-	padding: 50px 10px 10px 10px;
+	width: 20%;
 	background-color: #666;
-	transform: translateX(0%);
-	transition: transform 0.5s;
 }
 
-aside.show {
-	transform: translateX(-100%);
+#loadingModal {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #333;
+	opacity: 0.9;
+	z-index: 9999;
+	display: table;
+	text-align: center;
 }
 
-.visible {
-	display: block;
+#loadingModal div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#loadingModal h4 {
+	color: #eee;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+#loadingModal p {
+	color: #eee;
+	font-size: 20px;
+	font-weight: normal;
+}
+
+.hidden {
+	display: none;
+	visibility: hidden;
 }
