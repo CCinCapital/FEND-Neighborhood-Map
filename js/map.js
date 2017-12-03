@@ -11,7 +11,7 @@ function initYelpAPI() {
       AppViewModel.yelpAccessToken = JSON.parse(response).payload
     })
     .catch(function(err) {
-      throw new Error(`Error encountered during initializing Yelp API: ${err}`)
+      yelpError()
     })
     .then(function(){  
       return helper.makeRequest('getBusinesses', { 
@@ -39,13 +39,15 @@ function initMap() {
     // https://developers.google.com/maps/documentation/javascript/examples/control-positioning
     zoomControl: true,
     zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_CENTER
+      position: google.maps.ControlPosition.RIGHT_CENTER
     },
 
     streetViewControl: false,
 
     scaleControl: true,
   })
+
+  AppViewModel.updateMapCenter(AppViewModel.APP_DEFAULT_LAT_LNG)
 
   // Search bar for locations.
   // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
@@ -82,6 +84,10 @@ function initMap() {
 
   AppViewModel.map.addListener('zoom_changed', function() {
     map.reCenter()
+  })
+
+  AppViewModel.map.addListener('bounds_changed', function() {
+    map.reCenter()      
   })
 
   AppViewModel.mapLoaded(true)

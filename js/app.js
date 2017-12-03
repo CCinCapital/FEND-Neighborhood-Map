@@ -1,9 +1,15 @@
 const AppViewModel = {
+  mapNoError: ko.observable(true),
+  mapErrorMessage: `ERROR: Google Map Failed to Load, Please try again later.`,
+  yelpNoError: ko.observable(true),
+  yelpErrorMessage: `ERROR: Business info Failed to Load, Please try again later.`,
+
   yelpAccessToken: null,
   APP_DEFAULT_LAT_LNG: {lat: 43.662825, lng: -79.395648}, 
   geoLocation: null,
 
   map: null,
+  mapCenter: null,
   mapLoaded: ko.observable(false),
   businessLoaded: ko.observable(false),
   businesses: ko.observableArray(),
@@ -60,7 +66,11 @@ const AppViewModel = {
       .filtByCategory(AppViewModel.categoryFilter())
       .getResult()
     )
-  }
+  },
+
+  updateMapCenter: function(latLng) {
+    AppViewModel.mapCenter = latLng
+  },
 }
 
 const filt = {

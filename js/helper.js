@@ -186,12 +186,11 @@ const map = {
 
   mapPanTo: function(latLng) {
     AppViewModel.map.panTo(latLng)
+    AppViewModel.updateMapCenter(latLng)
   },
 
   reCenter: function() {
-    let mapCenter = AppViewModel.map.getCenter()
-
-    map.mapPanTo({lat: mapCenter.lat(), lng: mapCenter.lng()})
+    map.mapPanTo(AppViewModel.mapCenter)
   },
 
   getBusinesses: function (position) {
@@ -209,4 +208,13 @@ const map = {
       'coordinate': `${AppViewModel.geoLocation.lat}, ${AppViewModel.geoLocation.lng}`,
     })
   }
+}
+
+function mapError() {
+  console.log(`error`)
+  AppViewModel.mapNoError(false)
+}
+
+function yelpError() {
+  AppViewModel.yelpNoError(false)
 }

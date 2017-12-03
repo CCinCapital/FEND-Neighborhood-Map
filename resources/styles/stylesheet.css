@@ -19,39 +19,109 @@ p {
 	margin: 0;
 }
 
+#mapErrorModal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #555;
+	opacity: 1;
+	z-index: 0;
+	text-align: center;
+}
+
+#mapErrorModal p {
+	position: relative;
+	color: #eee;
+	font-size: 20px;
+	top: 50%;
+}
+
+#yelpErrorModal {
+	position: fixed;
+	top: 0;
+	right: 0;
+	padding: 5px 10px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 20px;
+	text-align: center;
+	background-color: #ff0000;
+	border-radius: 15px;
+}
+
 #loadingModal {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	height: 100%;
 	width: 100%;
 	background-color: #333;
 	opacity: 0.9;
-	z-index: 9999;
-	display: table;
+	z-index: 999;
 	text-align: center;
 }
 
-#loadingModal div {
-	display: table-cell;
-	vertical-align: middle;
+#spiner {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin: -50px 0 0 -50px;
+  border: 5px solid transparent;
+  border-top: 5px solid #d65151;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+  
+#spiner:before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  bottom: 5px;
+  left: 5px;
+  border: 5px solid transparent;
+  border-top: 5px solid #2287e6;
+  border-radius: 50%; 
+  animation: spin-reverse 0.4s linear infinite;
 }
 
-#loadingModal h4 {
-	color: #eee;
-	font-size: 30px;
-	font-weight: bold;
+#spiner:after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  bottom: 15px;
+  left: 15px;
+  border: 5px solid transparent;
+  border-top: 5px solid #dddd0d;
+  border-radius: 50%; 
+  animation: spin 1.5s linear infinite;
 }
 
-#loadingModal p {
-	color: #eee;
-	font-size: 20px;
-	font-weight: normal;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reverse {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }  
 }
 
 .hidden {
 	display: none;
-	visibility: hidden;
 }
 
 #map {
