@@ -6,48 +6,17 @@ html, body {
 
 body {
 	display: flex;
-	flex-direction: column;
 }
 
 ul {
+	padding: 0;
+	margin: 0;
 	list-style: none;
 }
 
-li {
-	display: block;
-}
-
-header {
-	width: 100%;
-	height: 50px;
-	top: 0;
-	background-color: #eee;
-	display: flex;
-	justify-content: center;
-	z-index: 9;
-}
-
-#map {
-	position: absolute;
-	top: 50px;
-	right: 0;
-	bottom: 0;
-	width: 80%;
-}
-
-#mapSearchBox {
-	width: 200px;
-	position: absolute;
-	z-index: 99;
-}
-
-aside {
-	position: absolute;
-	top: 50px;
-	left: 0;
-	bottom: 0;
-	width: 20%;
-	background-color: #666;
+p {
+	padding: 0;
+	margin: 0;
 }
 
 #loadingModal {
@@ -83,4 +52,494 @@ aside {
 .hidden {
 	display: none;
 	visibility: hidden;
+}
+
+#map {
+	flex-grow: 1;
+}
+
+#panel {
+	background-color: #00aaa0;
+}
+
+#mapSearch {
+	background-color: #00aaa0;
+}
+
+#filterPanel {
+	background-color: #00aaa0;
+}
+
+#storeList li {
+	background-color: #00aaa0;
+}
+
+@media (orientation: portrait) {
+	#panel {
+		position: fixed;
+		bottom: 138px;	
+		left: 5px;
+		z-index: 1;
+	}
+
+	#mapSearch {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 165px;
+		height: 40px;
+		border-radius: 10px;
+	}
+
+	#mapSearchBox {
+		position: absolute;
+		top: 5px;
+		right: 8px;
+		height: 24px;
+		line-height: 24px;
+		width: 115px;
+	}
+
+	#mapCurrentLocation {
+		position: absolute;
+		left: 5px;
+		top: 5px;
+		width: 30px;
+		height: 30px;
+		transition: transform 0.1s linear;
+	}
+
+	#mapCurrentLocation:hover{
+		transform: rotateZ(45deg);
+		cursor: pointer;
+	}
+
+	#results {
+		position: fixed;
+		bottom: 98px;
+		left: 5px;
+	}
+
+	#results h2 {
+		color: #333;
+		font-size: 20px;
+		height: 20px;
+		margin: 0;
+		padding: 0;
+		text-align: center;
+	}
+
+	#filterPanel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+		width: 165px;
+	}
+
+	#filterPanel p {
+		height: 20px;
+		font-size: 12px;
+		color: #333;
+		padding: 3px 5px;
+		font-weight: bold;
+	}
+
+	#nameFilter {
+		float: right;
+		width: 102px;
+	}
+
+	#priceFilter {
+		float: right;
+		width: 106px;
+	}
+
+	#categoryFilter {
+		float: right;
+		width: 90px;
+	}
+
+	#storeList {
+		position: fixed;
+		bottom: 0;
+		right: 5px;
+		width: 178px;
+		max-height: 138px;
+		overflow-y: auto;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+	}
+
+	#storeList li {
+		height: 25px;
+		line-height: 15px;
+		border-top: 1px solid #eee;
+		font-size: 1em;
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+	}
+
+	#storeList li:first-child {
+		border-top: none;
+	}
+
+	#storeList li p {
+		padding: 5px 0 5px 10px;
+		margin: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+@media (orientation: portrait) and (min-width: 400px) {
+	#panel {
+		position: fixed;
+		bottom: 168px;	
+		left: 5px;
+		z-index: 1;
+	}
+
+	#mapSearch {
+		width: 185px;
+	}
+
+	#mapSearchBox {
+		position: absolute;
+		top: 5px;
+		right: 8px;
+		height: 24px;
+		line-height: 24px;
+		width: 135px;
+	}
+
+	#results {
+		bottom: 128px;
+	}
+
+	#filterPanel {
+		width: 185px;
+	}
+
+	#filterPanel p {
+		height: 30px;
+		font-size: 18px;
+	}
+
+	#nameFilter {
+		width: 112px;
+	}
+
+	#priceFilter {
+		width: 116px;
+	}
+
+	#categoryFilter {
+		width: 90px;
+	}
+
+	#storeList {
+		width: 208px;
+		max-height: 168px;
+	}
+
+	#storeList li {
+		height: 30px;
+		line-height: 20px;
+		font-size: 1.2em;
+	}
+}
+
+@media (orientation: portrait) and (min-width: 600px) {
+	#panel {
+		bottom: 228px;	
+	}
+
+	#mapSearch {
+		width: 245px;
+	}
+
+	#mapSearchBox {
+		width: 195px;
+	}
+
+	#results {
+		bottom: 188px;
+	}
+
+	#filterPanel {
+		width: 245px;
+	}
+
+	#filterPanel p {
+		height: 50px;
+		font-size: 20px;
+	}
+
+	#nameFilter {
+		width: 152px;
+		margin-right: 5px;
+		font-size: 20px;
+	}
+
+	#priceFilter {
+		width: 156px;
+		margin-right: 5px;
+		font-size: 20px;
+	}
+
+	#categoryFilter {
+		width: 130px;
+		margin-right: 5px;
+		font-size: 22px;
+	}
+
+	#storeList {
+		width: 348px;
+		max-height: 228px;
+	}
+
+	#storeList li {
+		height: 40px;
+		line-height: 30px;
+		font-size: 1.6em;
+	}
+}
+
+@media (orientation: portrait) and (min-width: 750px) {
+	#mapSearch {
+		width: 305px;
+	}
+
+	#mapSearchBox {
+		width: 255px;
+	}
+
+	#filterPanel {
+		width: 305px;
+	}
+
+	#nameFilter {
+		width: 202px;
+	}
+
+	#priceFilter {
+		width: 206px;
+	}
+
+	#categoryFilter {
+		width: 180px;
+	}	
+
+	#storeList {
+		width: 408px;
+		max-height: 228px;
+	}
+}
+
+
+@media (orientation: landscape) {
+	#panel {
+		position: relative;
+		top: 0px;	
+		left: 0px;
+		z-index: 1;
+		width: 165px;
+		height: 100%;
+	}
+
+	#mapSearch {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 180px;
+		height: 40px;
+		border-bottom-right-radius: 20px;
+		border-top-right-radius: 20px;
+	}
+
+	#mapSearchBox {
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		height: 24px;
+		line-height: 24px;
+		width: 130px;
+	}
+
+	#mapCurrentLocation {
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		width: 30px;
+		height: 30px;
+		transition: transform 0.1s linear;
+	}
+
+	#mapCurrentLocation:hover{
+		transform: rotateZ(45deg);
+		cursor: pointer;
+	}
+
+	#results {
+		position: absolute;
+		top: 40px;
+		left: 0;
+	}
+
+	#results h2 {
+		color: #333;
+		font-size: 20px;
+		height: 20px;
+		margin: 0;
+		padding: 0;
+		text-align: center;
+	}
+
+	#filterPanel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 165px;
+	}
+
+	#filterPanel p {
+		height: 20px;
+		font-size: 12px;
+		color: #333;
+		padding: 3px 5px;
+		font-weight: bold;
+	}
+
+	#nameFilter {
+		float: right;
+		width: 102px;
+	}
+
+	#priceFilter {
+		float: right;
+		width: 93px;
+	}
+
+	#categoryFilter {
+		float: right;
+		width: 90px;
+	}
+
+	#storeList {
+		position: absolute;
+		top: 98px;
+		left: -3px;
+		width: 168px;
+		max-height: 190px;
+		overflow-y: auto;
+	}
+
+	#storeList li {
+		height: 25px;
+		line-height: 15px;
+		border-top: 1px solid #eee;
+		font-size: 1em;
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+	}
+
+	#storeList li p {
+		padding: 5px 0 5px 10px;
+		margin: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
+@media (orientation: landscape) and (min-height: 250px) {
+	#panel {
+		width: 210px;
+	}
+
+	#mapSearch {
+		width: 230px;
+	}
+
+	#mapSearchBox {
+		width: 180px;
+	}
+
+	#filterPanel {
+		width: 210px;
+	}
+
+	#filterPanel p {
+		font-size: 16px;
+	}
+
+	#nameFilter {
+		width: 130px;
+	}
+
+	#priceFilter {
+		width: 123px;
+	}
+
+	#categoryFilter {
+		width: 120px;
+	}
+
+	#storeList {
+		width: 210px;
+		max-height: 145px;
+	}
+
+	#storeList li {
+		height: 25px;
+		line-height: 15px;
+		font-size: 1em;
+	}
+
+	#storeList li p {
+		padding: 5px 0 5px 10px;
+	}	
+}
+
+@media (orientation: landscape) and (min-height: 350px) {
+	#storeList {
+		width: 210px;
+		max-height: 235px;
+	}
+}
+
+@media (orientation: landscape) and (min-height: 400px) {
+	#storeList {
+		width: 210px;
+		max-height: 270px;
+	}
+}
+
+@media (orientation: landscape) and (min-height: 500px) {
+	#storeList {
+		width: 210px;
+		max-height: 370px;
+	}
+
+	#storeList li {
+		height: 30px;
+		line-height: 20px;
+		font-size: 1.2em;
+	}
+}
+
+@media (orientation: landscape) and (min-height: 750px) {
+	#storeList {
+		width: 210px;
+		max-height: 500px;
+	}
+
+	#storeList li {
+		height: 30px;
+		line-height: 20px;
+		font-size: 1.2em;
+	}
 }
