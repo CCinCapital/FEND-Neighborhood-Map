@@ -188,7 +188,7 @@ const map = {
     AppViewModel.map.panTo(latLng)
   },
 
-  offsetMap: function() {
+  reCenter: function() {
     let mapCenter = AppViewModel.map.getCenter()
 
     map.mapPanTo({lat: mapCenter.lat(), lng: mapCenter.lng()})

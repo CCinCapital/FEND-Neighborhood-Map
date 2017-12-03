@@ -30,7 +30,7 @@ function initMap() {
     disableDefaultUI: true,
     fullscreenControl: false,
     gestureHandling: 'none',
-    keyboardShortcuts: false,
+
     zoom: 14,
     maxZoom: 16,
     minZoom: 12,
@@ -81,9 +81,8 @@ function initMap() {
   })
 
   AppViewModel.map.addListener('zoom_changed', function() {
-    map.offsetMap()
+    map.reCenter()
   })
 
   AppViewModel.mapLoaded(true)
 }
-
