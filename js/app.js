@@ -35,40 +35,35 @@ const AppViewModel = {
       })
 
     AppViewModel.filteredBusinesses(AppViewModel.businesses())
-    AppViewModel.categories(jsSet(categories))
-    AppViewModel.price(jsSet(price).sort())
+    AppViewModel.categories(helper.jsSet(categories))
+    AppViewModel.price(helper.jsSet(price).sort())
 
     AppViewModel.businessLoaded(true)
   },
 
   handleClick: function(target) {
-    console.log(target)
-    onMarkerClick(target)
+    map.onMarkerClick(target)
   },
 
-  getGeoLocation: function() {
-    GeoLocation()
-      .then(function(position){
-        AppViewModel.geoLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }
-      })
+  getBusinessAroundUser: function() {
+    helper
+      .getGeoLocation()
+      .then(helper.getBusinesses)
+      .then(AppViewModel.updateBusinesses)
   },
 
   filt: function() {
-    closeAllInfoWindow()
     AppViewModel.filteredBusinesses(
       filt
       .filtByName(AppViewModel.nameFilter())
       .filtByPrice(AppViewModel.priceFilter())
       .filtByCategory(AppViewModel.categoryFilter())
-      .buffer
+      .getResult()
     )
   }
 }
 
-let filt = {
+const filt = {
   array: AppViewModel.businesses(),
   buffer: [],
 
@@ -102,40 +97,53 @@ let filt = {
   filtByCategory: function(filter) {
     if(this.buffer.length > 0 && filter != 'All') {
       this.buffer = this.buffer.filter(function(element) {
-        if(element.categories.filter(function(category){if(category.title == filter) return category}).length > 0) {
-          return element
-        }
+        if(element.categories.filter(
+            function(category){
+              if(category.title == filter) return category
+            }
+          ).length > 0) {
+            return element
+          }
       })
     }
 
     return this
+  },
+
+  getResult: function() {
+    return this.buffer
   }
 }
 
 AppViewModel.nameFilter.subscribe(function(change) {
+  map.closeAllInfoWindow()
   AppViewModel.filt()
 })
 
 AppViewModel.priceFilter.subscribe(function(change) {
+  map.closeAllInfoWindow()
   AppViewModel.filt()
 })
 
 AppViewModel.categoryFilter.subscribe(function(change) {
+  map.closeAllInfoWindow()
   AppViewModel.filt()
 })
 
 AppViewModel.mapLoaded.subscribe(function(change) {
-  initMarkers()
+  map.initMarkers()
 })
 
 AppViewModel.businessLoaded.subscribe(function(change) {
-  initMarkers()
+  map.initMarkers()
 })
 
 AppViewModel.filteredBusinesses.subscribe(function(change) {
   if(AppViewModel.businessLoaded()) {
-    replaceMarkers()
+    map.filtMarkers()
   }
 })
 
 ko.applyBindings(AppViewModel)
+
+

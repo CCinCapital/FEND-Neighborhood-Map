@@ -6,7 +6,7 @@ function initYelpAPI() {
   const _YelpAppId = 'bg69c3FQKEnMNsBUwvk2YA',
         _YelpAppSecret = 'M3IkShcjrhXDGSvQebZhNizmX8imOnXs308UfB2BPCC1JFZXykvt5zhUZjfLMZdl'
 
-  makeRequest('getAccessToken', {'appId': _YelpAppId,'appSecret': _YelpAppSecret})
+  helper.makeRequest('getAccessToken', {'appId': _YelpAppId,'appSecret': _YelpAppSecret})
     .then(function(response) {
       AppViewModel.yelpAccessToken = JSON.parse(response).payload
     })
@@ -14,7 +14,7 @@ function initYelpAPI() {
       throw new Error(`Error encountered during initializing Yelp API: ${err}`)
     })
     .then(function(){  
-      return makeRequest('getBusinesses', { 
+      return helper.makeRequest('getBusinesses', { 
         'accessToken': AppViewModel.yelpAccessToken.access_token,
         'coordinate': `${AppViewModel.APP_DEFAULT_LAT_LNG.lat}, ${AppViewModel.APP_DEFAULT_LAT_LNG.lng}`,
       })
@@ -29,17 +29,14 @@ function initMap() {
     clickableIcons: false,
     disableDefaultUI: true,
     fullscreenControl: false,
-    gestureHandling: 'greedy',
+    gestureHandling: 'none',
     keyboardShortcuts: false,
     zoom: 14,
+    maxZoom: 16,
+    minZoom: 12,
+
     // Move contols around
     // https://developers.google.com/maps/documentation/javascript/examples/control-positioning
-    mapTypeControl: true,
-    mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-      position: google.maps.ControlPosition.TOP_RIGHT
-    },
-
     zoomControl: true,
     zoomControlOptions: {
         position: google.maps.ControlPosition.RIGHT_CENTER
@@ -67,6 +64,8 @@ function initMap() {
         console.log("Returned place contains no geometry")
         return
       }
+
+      //console.log(place.geometry.location.lat(), place.geometry.location.lng())
       if (place.geometry.viewport) {
         // Only geocodes have viewport.
         bounds.union(place.geometry.viewport)
@@ -78,7 +77,11 @@ function initMap() {
   })
 
   AppViewModel.map.addListener('click', function(e) {
-    placeMarker(e.latLng, AppViewModel.map)
+    map.placeMarker(e.latLng, AppViewModel.map)
+  })
+
+  AppViewModel.map.addListener('zoom_changed', function() {
+    map.offsetMap()
   })
 
   AppViewModel.mapLoaded(true)
