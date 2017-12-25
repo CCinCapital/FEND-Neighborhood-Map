@@ -3,6 +3,9 @@
 
 This project is to demostrates the ability to build web app with MVVM framework (_`Knockout.js`_) and third party APIs _(`Google Map, RapidAPI, Yelp Fusion`)_. 
 
+# Live Preview
+[Live Preview](https://ccincapital.github.io/FEND-Neighborhood-Map/) on GitHub pages.
+
 ## API usage
 - **Google Map**:  Generates Map, Marker, and InfoWindow.
 
